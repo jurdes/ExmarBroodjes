@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Broodjes {
@@ -12,12 +15,19 @@ public class Broodjes {
     public static void main(String[] args) throws IOException, ParseException, URISyntaxException {
         
         File orderDir = new File ("D:/Broodjes");
-        File[] orderFiles = orderDir.listFiles();
+        File[] orderFileArray = orderDir.listFiles();
+        List<File> orderFiles = new ArrayList<File>(Arrays.asList(orderFileArray));
         
         Bank bank = new Bank();
         History history = new History();
-        
-        for (File orderFile : orderFiles) {
+
+        for (int fileNr = 0; fileNr<orderFiles.size(); fileNr++) {
+        	File orderFile = orderFiles.get(fileNr);
+        	if (orderFile.isDirectory()) {
+        		orderFileArray = orderFile.listFiles();
+        		orderFiles.addAll(Arrays.asList(orderFileArray));
+        		continue;
+        	}
             Order order = Order.readOrder(orderFile);
             for (int i=0; i<order.getNrOfLines(); i++) {
                 bank.addDebt(order.getPayer(), order.getLineBuyer(i), order.getLinePrice(i));
@@ -41,5 +51,5 @@ public class Broodjes {
         
     }
 
-    
+
 }
