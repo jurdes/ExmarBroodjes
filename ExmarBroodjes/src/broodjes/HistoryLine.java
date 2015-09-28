@@ -38,6 +38,10 @@ public class HistoryLine implements Comparable<HistoryLine> {
 		return itemName;
 	}
 	
+	public boolean isSelf() {
+		return fromUser.equals(toUser);
+	}
+	
 	public int compareTo(HistoryLine o2) {
         return getDate().compareTo(o2.getDate());
     }
