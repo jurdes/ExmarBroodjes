@@ -5,12 +5,16 @@ import java.util.Date;
 public class HistoryLine implements Comparable<HistoryLine> {
     
     private final Date date;
-    private final String description;
     private final Currency value;
+	private final String fromUser;
+	private final String toUser;
+	private final String itemName;
 
-    public HistoryLine(Date date, String description, Currency value) {
-        this.date = date;
-        this.description = description;
+    public HistoryLine(String fromUser, String toUser, Date date, String itemName, Currency value) {
+        this.fromUser = fromUser;
+		this.toUser = toUser;
+		this.date = date;
+		this.itemName = itemName;
         this.value = value;
     }
 
@@ -18,22 +22,28 @@ public class HistoryLine implements Comparable<HistoryLine> {
         return date;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public Currency getValue() {
         return value;
     }
+    
+    public String getFromUser() {
+		return fromUser;
+	}
 
-    public int compareTo(HistoryLine o2) {
+	public String getToUser() {
+		return toUser;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+	
+	public int compareTo(HistoryLine o2) {
         return getDate().compareTo(o2.getDate());
     }
     
-    public String toString() {
-        return date + ": "+description+" ("+value+")";
+	public String toString() {
+        return date + ": "+fromUser+"->"+toUser+" "+itemName+" ("+value+")";
     }
-
-    
     
 }

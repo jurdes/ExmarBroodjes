@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-
 
 public class History {
 
@@ -17,8 +15,14 @@ public class History {
     public History() {
     }
 
-    public void addEvent(String user, Date date, String event, Currency value) {
-        historyLines.add(user, new HistoryLine(date, event, value));
+    public void addEvent(String fromUser, String toUser, Date date, String itemName, Currency value) {
+    	if (fromUser.equals(toUser)) {
+    		value = Currency.ZERO;
+    		historyLines.add(fromUser, new HistoryLine(fromUser, toUser, date, itemName, value));
+    	} else {
+    		historyLines.add(fromUser, new HistoryLine(fromUser, toUser, date, itemName, value));
+    		historyLines.add(toUser, new HistoryLine(fromUser, toUser, date, itemName, value.negate()));
+    	}
     }
 
     public String toString() {
@@ -40,6 +44,8 @@ public class History {
             List<HistoryLine> lines = entry.getValue();
             
             if (historyValidator.validate(lines)) {
+            	
+            	TextTable historyTable = new TextTable(9);
             
 	            Currency balance = Currency.ZERO;
 	
@@ -58,16 +64,15 @@ public class History {
 	            for (int lineNr=0; lineNr<lines.size(); lineNr++) {
 	                HistoryLine line = lines.get(lineNr);
 	                balance = balance.add(line.getValue());
-	                String balancePart = line.getValue()+" = " + balance;
-	                balancePart = StringUtils.rightPad(balancePart, 18);
 	
 	                if (lineNr>=neededLineNr) {
 	                    if (lineNr==neededLineNr && lineNr>0) {
 	                        result.append(lineNr+" acties verborgen\n");
 	                    }
-	                    result.append(DATE_FORMATTER.format(line.getDate())+": "+balancePart+" : "+line.getDescription()+"\n");
+	                    historyTable.addData(DATE_FORMATTER.format(line.getDate()), ""+line.getValue(), "=>", ""+balance, ":",line.getFromUser(),"=>",line.getToUser(), line.getItemName());
 	                }
 	            }
+	            result.append(historyTable);
             	finalResult.append(result);
             	finalResult.append("\n\n");
             }

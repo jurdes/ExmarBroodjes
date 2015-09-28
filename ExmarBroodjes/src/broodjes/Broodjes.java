@@ -32,12 +32,7 @@ public class Broodjes {
             Order order = Order.readOrder(orderFile);
             for (int i=0; i<order.getNrOfLines(); i++) {
                 bank.addDebt(order.getPayer(), order.getLineBuyer(i), order.getLinePrice(i));
-                if (order.getLineBuyer(i).equals(order.getPayer())) {
-                    history.addEvent(order.getLineBuyer(i), order.getLineDate(i) , "Je kocht "+order.getLineName(i)+" prijs: "+order.getLinePrice(i)+" voor jezelf", Currency.ZERO);
-                } else {
-                    history.addEvent(order.getPayer(),order.getLineDate(i) , "Je kocht "+order.getLineName(i)+" voor "+order.getLineBuyer(i)+" prijs : "+order.getLinePrice(i), order.getLinePrice(i));
-                    history.addEvent(order.getLineBuyer(i),order.getLineDate(i) , order.getPayer()+" betaalde "+order.getLineName(i)+" prijs : "+order.getLinePrice(i)+" voor jou", order.getLinePrice(i).negate());
-                }
+                history.addEvent(order.getPayer(), order.getLineBuyer(i), order.getLineDate(i) , order.getLineName(i), order.getLinePrice(i));
             }
         }
         
