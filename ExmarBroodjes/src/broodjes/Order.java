@@ -87,7 +87,6 @@ public class Order {
 
     public static Order readOrder(File orderFile) {
         try {
-            System.out.println("Reading orderfile ["+orderFile.getName()+"]");
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(orderFile), "Cp1250"));
             
             String fileName = orderFile.getName();

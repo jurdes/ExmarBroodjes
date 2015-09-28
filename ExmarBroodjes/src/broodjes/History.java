@@ -22,7 +22,12 @@ public class History {
     }
 
     public String toString() {
-        StringBuffer result = new StringBuffer();
+    	return toString(new NoHistoryValidation());
+    }
+
+	public String toString(HistoryValidator historyValidator) {
+
+        StringBuffer finalResult = new StringBuffer();
 
         List<HistoryLineValidator> validators = new ArrayList<>();
         validators.add(new AtLeastLastWeek());
@@ -30,39 +35,46 @@ public class History {
         validators.add(new NoDateSplitting());
 
         for (Entry<String, List<HistoryLine>> entry : historyLines.entrySet()) {
+        	StringBuffer result = new StringBuffer();
             result.append(entry.getKey()+":\n");
             List<HistoryLine> lines = entry.getValue();
-            Currency balance = Currency.ZERO;
-
-            int neededLineNr = 0;
-            for (int lineNr=lines.size()-1; lineNr>=0; lineNr--) {
-                boolean needed = false;
-                for (HistoryLineValidator validator : validators) {
-                    needed = needed || validator.isNeeded(lines, lineNr);
-                }
-                if (!needed) {
-                    neededLineNr = lineNr+1;
-                    break;
-                }
+            
+            if (historyValidator.validate(lines)) {
+            
+	            Currency balance = Currency.ZERO;
+	
+	            int neededLineNr = 0;
+	            for (int lineNr=lines.size()-1; lineNr>=0; lineNr--) {
+	                boolean needed = false;
+	                for (HistoryLineValidator validator : validators) {
+	                    needed = needed || validator.isNeeded(lines, lineNr);
+	                }
+	                if (!needed) {
+	                    neededLineNr = lineNr+1;
+	                    break;
+	                }
+	            }
+	
+	            for (int lineNr=0; lineNr<lines.size(); lineNr++) {
+	                HistoryLine line = lines.get(lineNr);
+	                balance = balance.add(line.getValue());
+	                String balancePart = line.getValue()+" = " + balance;
+	                balancePart = StringUtils.rightPad(balancePart, 18);
+	
+	                if (lineNr>=neededLineNr) {
+	                    if (lineNr==neededLineNr && lineNr>0) {
+	                        result.append(lineNr+" acties verborgen\n");
+	                    }
+	                    result.append(DATE_FORMATTER.format(line.getDate())+": "+balancePart+" : "+line.getDescription()+"\n");
+	                }
+	            }
+            	finalResult.append(result);
+            	finalResult.append("\n\n");
             }
-
-            for (int lineNr=0; lineNr<lines.size(); lineNr++) {
-                HistoryLine line = lines.get(lineNr);
-                balance = balance.add(line.getValue());
-                String balancePart = line.getValue()+" = " + balance;
-                balancePart = StringUtils.rightPad(balancePart, 18);
-
-                if (lineNr>=neededLineNr) {
-                    if (lineNr==neededLineNr && lineNr>0) {
-                        result.append(lineNr+" acties verborgen\n");
-                    }
-                    result.append(DATE_FORMATTER.format(line.getDate())+": "+balancePart+" : "+line.getDescription()+"\n");
-                }
-            }
-            result.append("\n\n");
         }
 
-        return result.toString();
-    }
+        return finalResult.toString();
+	}
+	
 
 }

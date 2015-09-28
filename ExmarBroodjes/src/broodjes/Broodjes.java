@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -44,7 +45,7 @@ public class Broodjes {
         
         System.out.println();
         
-        System.out.println(history);
+        System.out.println(history.toString(new LastDayHistoryValidator(new Date())));
         
         //URI mailUri = URI.create("mailto:jurgen.deswert@gmail.com?subject=First%20Email");
         //Desktop.getDesktop().mail(mailUri);
