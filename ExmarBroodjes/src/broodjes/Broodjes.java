@@ -7,8 +7,12 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import sun.util.calendar.Gregorian;
 
 
 public class Broodjes {
@@ -37,10 +41,12 @@ public class Broodjes {
         }
         
         System.out.println(bank);
-        
         System.out.println();
         
-        System.out.println(history.toString(new LastDayHistoryValidator(new Date())));
+        Calendar c=GregorianCalendar.getInstance();
+        //c.add(Calendar.DAY_OF_YEAR, -1);
+        		
+        System.out.println(history.toString(new LastDayHistoryValidator(c.getTime())));
         
         //URI mailUri = URI.create("mailto:jurgen.deswert@gmail.com?subject=First%20Email");
         //Desktop.getDesktop().mail(mailUri);
