@@ -75,17 +75,20 @@ public class History {
 		    }
 		}
 		
-		Map<String, Integer> amounts = new HashMap<String,Integer>();
+		Map<String, Double> amounts = new HashMap<String,Double>();
 
 		for (int lineNr=0; lineNr<lines.size(); lineNr++) {
 		    HistoryLine line = lines.get(lineNr);
 		    
 		    if (line.getItemName().indexOf("terugbetaling")<0 && line.getToUser().equals(user)) {
-		    	Integer amount = amounts.get(line.getItemName());
-		    	if (amount == null) { 
-		    		amount = 0;
+		    	for (Entry<String, Double> entry : amounts.entrySet()) {
+		    		amounts.put(entry.getKey(), entry.getValue()*0.95);
 		    	}
-		    	amounts.put(line.getItemName(), amount+1);
+		    	Double amount = amounts.get(line.getItemName());
+		    	if (amount == null) { 
+		    		amount = 0.0;
+		    	}
+		    	amounts.put(line.getItemName(), amount + 1.0);
 		    }
 		    
 		    if (line.getToUser().equals(user) && !line.isSelf()) {
@@ -104,23 +107,23 @@ public class History {
 		result.append(historyTable);
 		
 		result.append("\n");
-		Entry<String,Integer> favorite = getMaximum(amounts.entrySet());
-		result.append("Favoriet: "+favorite.getKey()+" ("+favorite.getValue()+"x)");
+		Entry<String,Double> favorite = getMaximum(amounts.entrySet());
+		result.append("Favoriet: "+favorite.getKey());
 		result.append("\n");
 		
 		return result.toString();
 	}
 	
 	
-	private static Entry<String,Integer> getMaximum(Set<Entry<String, Integer>> entries) {
-		Entry<String,Integer> max = null;
-		for (Entry<String,Integer> entry : entries) {
+	private static Entry<String,Double> getMaximum(Set<Entry<String, Double>> entries) {
+		Entry<String,Double> max = null;
+		for (Entry<String,Double> entry : entries) {
 			if (max == null || entry.getValue()>max.getValue()) {
 				max = entry;
 			}
 		}
 		return max;
 	}
-
+	
 }
 
