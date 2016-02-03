@@ -43,10 +43,12 @@ public class Broodjes {
         System.out.println(bank);
         System.out.println();
         
-        Calendar c=GregorianCalendar.getInstance();
+        //Calendar c=GregorianCalendar.getInstance();
         //c.add(Calendar.DAY_OF_YEAR, -1);
-        		
-        System.out.println(history.toString(new LastDayHistoryValidator(c.getTime())));
+        //Date date = c.getTime();
+        Date date = history.getLatestDate();
+        
+        System.out.println(history.toString(new LastDayHistoryValidator(date)));
         
         //URI mailUri = URI.create("mailto:jurgen.deswert@gmail.com?subject=First%20Email");
         //Desktop.getDesktop().mail(mailUri);
