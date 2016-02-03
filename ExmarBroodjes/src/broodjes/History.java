@@ -59,7 +59,7 @@ public class History {
     	result.append(user+":\n");
     	
 		TextTable historyTable = new TextTable(9);
-		historyTable.addData("Datum","Prijs","","Saldo","","Koper","","Ontvanger","Item");
+		historyTable.addData("Date","Price","","Balance","","Payer","","Receiver","Item");
          
 		Currency balance = Currency.ZERO;
 
@@ -80,7 +80,7 @@ public class History {
 		for (int lineNr=0; lineNr<lines.size(); lineNr++) {
 		    HistoryLine line = lines.get(lineNr);
 		    
-		    if (line.getItemName().indexOf("terugbetaling")<0 && line.getToUser().equals(user)) {
+		    if (line.getItemName().indexOf(Translator.translateWord("terugbetaling"))<0 && line.getToUser().equals(user)) {
 		    	for (Entry<String, Double> entry : amounts.entrySet()) {
 		    		amounts.put(entry.getKey(), entry.getValue()*0.95);
 		    	}
@@ -99,7 +99,7 @@ public class History {
 
 		    if (lineNr>=neededLineNr) {
 		        if (lineNr==neededLineNr && lineNr>0) {
-		            result.append(lineNr+" acties verborgen\n");
+		            result.append(lineNr+" hidden actions\n");
 		        }
 		        historyTable.addData(DATE_FORMATTER.format(line.getDate()), ""+line.getValue(), "=>", ""+balance, ":",line.getFromUser(),"=>",line.getToUser(), line.getItemName());
 		    }
@@ -108,7 +108,7 @@ public class History {
 		
 		result.append("\n");
 		Entry<String,Double> favorite = getMaximum(amounts.entrySet());
-		result.append("Favoriet: "+favorite.getKey());
+		result.append("Favorite: "+favorite.getKey());
 		result.append("\n");
 		
 		return result.toString();
@@ -123,6 +123,18 @@ public class History {
 			}
 		}
 		return max;
+	}
+
+	public Date getLatestDate() {
+		Date latestDate = new Date(0);
+		for (Entry<String, List<HistoryLine>> entry : historyLines.entrySet()) {
+			for (HistoryLine line : entry.getValue()) {
+				if (line.getDate().after(latestDate)) {
+					latestDate = line.getDate();
+				}
+			}
+		}
+		return latestDate;
 	}
 	
 }

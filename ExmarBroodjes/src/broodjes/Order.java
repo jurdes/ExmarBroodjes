@@ -136,7 +136,7 @@ public class Order {
     private static OrderLine parseOrderLine(String line) {
         String buyer = getName(line);
         Currency price = getPrice(line);
-        String description = getDescription(line);
+        String description = Translator.translateSentence(getDescription(line));
         return new OrderLine(buyer, description, price);
     }
 
