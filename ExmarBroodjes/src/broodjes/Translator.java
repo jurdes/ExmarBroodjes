@@ -83,6 +83,11 @@ public class Translator {
     translations.put("natuur", "plain");
     translations.put("tonijnsalade", "tunasalad");
     translations.put("komkommersla", "cucumbersalad");
+    translations.put("gezond", "healthy");
+    translations.put("vleessalade", "meatsalad");
+    translations.put("kipsalade", "chickensalad");
+    translations.put("ei", "egg");
+    translations.put("salade","salad");
   }
   
   
